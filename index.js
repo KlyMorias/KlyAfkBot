@@ -1,40 +1,39 @@
 const { Client } = require('discord.js-selfbot-v13');
-// Bu ayarlar hatayı aşmanı sağlar
-const client = new Client({ 
-    checkUpdate: false 
-});
+const { joinVoiceChannel } = require('@discordjs/voice');
 
+const client = new Client({ checkUpdate: false });
 const TOKEN = process.env.DISCORD_TOKEN;
 const ODA_ID = "1407413900764250174";
 
 client.on('ready', async () => {
-    console.log(`${client.user.tag} giriş yaptı!`);
-    joinVoice();
+    console.log(`${client.user.tag} aktif! Odaya giriliyor...`);
+    connectToVoice();
 });
 
-async function joinVoice() {
+function connectToVoice() {
     const channel = client.channels.cache.get(ODA_ID);
-    if (!channel) return console.log("Kanal bulunamadı, ID doğru mu?");
-    
+    if (!channel) return console.log("HATA: Kanal bulunamadı.");
+
     try {
-        const { joinVoiceChannel } = require('@discordjs/voice');
         joinVoiceChannel({
             channelId: channel.id,
             guildId: channel.guild.id,
             adapterCreator: channel.guild.voiceAdapterCreator,
+            selfDeaf: true,
+            selfMute: false
         });
-        console.log("Sese bağlanıldı.");
-    } catch (e) {
-        console.error("Bağlantı hatası:", e);
+        console.log("--> Ses kanalına başarıyla girildi.");
+    } catch (err) {
+        console.error("Bağlantı hatası:", err);
     }
 }
 
-// Atılınca 15 saniye bekleme mantığı
+// Sesten düşme kontrolü
 client.on('voiceStateUpdate', (oldState, newState) => {
     if (oldState.member.id === client.user.id && !newState.channelId) {
-        console.log("Sesten düştüm, 15 saniye bekleniyor...");
+        console.log("Bağlantı kesildi, 15 saniye sonra tekrar denenecek...");
         setTimeout(() => {
-            if (!client.voice.adapters.size) joinVoice();
+            connectToVoice();
         }, 15000);
     }
 });
