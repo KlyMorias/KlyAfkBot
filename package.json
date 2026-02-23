@@ -4,12 +4,10 @@
   "main": "index.js",
   "dependencies": {
     "discord.js-selfbot-v13": "^3.4.4",
-    "@discordjs/opus": "^0.9.0",
-    "libsodium-wrappers": "^0.7.13",
+    "discord-rpc": "^4.0.1",
     "debug": "^4.3.4",
-    "werift-rtp": "^0.17.0"
-  },
-  "scripts": {
-    "start": "node index.js"
+    "libsodium-wrappers": "^0.7.13",
+    "werift-rtp": "^0.17.0",
+    "@discordjs/opus": "^0.9.0"
   }
 }
