@@ -6,7 +6,7 @@
     "discord.js-selfbot-v13": "^3.4.4",
     "debug": "^4.3.4",
     "libsodium-wrappers": "^0.7.13",
-    "werift-rtp": "^0.11.0",
-    "@discordjs/opus": "^0.9.0"
+    "werift-rtp": "latest",
+    "opusscript": "^0.0.8"
   }
 }
