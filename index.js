@@ -1,7 +1,6 @@
 const { Client } = require('discord.js-selfbot-v13');
-const { joinVoiceChannel } = require('@discordjs/voice');
-
 const client = new Client({ checkUpdate: false });
+
 const TOKEN = process.env.DISCORD_TOKEN;
 const ODA_ID = "1407413900764250174";
 
@@ -10,31 +9,32 @@ client.on('ready', async () => {
     connectToVoice();
 });
 
-function connectToVoice() {
+async function connectToVoice() {
     const channel = client.channels.cache.get(ODA_ID);
-    if (!channel) return console.log("HATA: Kanal bulunamadı.");
+    if (!channel) return console.log("HATA: Kanal bulunamadı. ID doğru mu?");
 
     try {
-        joinVoiceChannel({
-            channelId: channel.id,
-            guildId: channel.guild.id,
-            adapterCreator: channel.guild.voiceAdapterCreator,
-            selfDeaf: true,
-            selfMute: false
-        });
+        // Selfbot-v13 için en stabil bağlanma yöntemi
+        await channel.join(); 
+        
+        // Mikrofonu kapatma/açma (opsiyonel)
+        const voice = channel.guild.me.voice;
+        await voice.setSelfDeaf(true);
+        await voice.setSelfMute(false);
+
         console.log("--> Ses kanalına başarıyla girildi.");
     } catch (err) {
         console.error("Bağlantı hatası:", err);
+        // Hata durumunda 10 saniye sonra tekrar dene
+        setTimeout(connectToVoice, 10000);
     }
 }
 
-// Sesten düşme kontrolü
+// Bağlantı koparsa otomatik tekrar bağlanma
 client.on('voiceStateUpdate', (oldState, newState) => {
     if (oldState.member.id === client.user.id && !newState.channelId) {
         console.log("Bağlantı kesildi, 15 saniye sonra tekrar denenecek...");
-        setTimeout(() => {
-            connectToVoice();
-        }, 15000);
+        setTimeout(connectToVoice, 15000);
     }
 });
 
