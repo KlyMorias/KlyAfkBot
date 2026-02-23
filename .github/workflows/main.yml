@@ -14,10 +14,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20'
-          # Cache satırını sildik, hata vermez artık.
           
       - name: Install Dependencies
-        run: npm install
+        # Burayı güncelledim: Eksik paketleri tek tek zorla kuruyor
+        run: |
+          npm install @discordjs/voice discord.js-selfbot-v13 libsodium-wrappers opusscript debug werift-rtp
 
       - name: Run Bot
         run: node index.js
