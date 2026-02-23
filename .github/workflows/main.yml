@@ -14,6 +14,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20'
+          # Cache satırını sildik, hata vermez artık.
           
       - name: Install Dependencies
         run: npm install
