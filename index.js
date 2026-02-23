@@ -1,54 +1,43 @@
 const { Client } = require('discord.js-selfbot-v13');
-const client = new Client({ checkUpdate: false });
 
-// AYARLAR
-const TOKEN = "MTIxMjc3NzIyMjQxNTMxOTA1MA.GWVQs6.jsFJMALzgcEc3mR6Lbg4dtAbMDvd111QpoFu_I"; // Güvenlik için tokenı panelden ekleyeceğiz
-const ODA_ID = "1407413900764250174"; // Senin kanal ID'n
+// Hata veren ayar okumasını devre dışı bırakmak için bu ayarla başlatıyoruz
+const client = new Client({
+    checkUpdate: false,
+    patchVoice: true // Ses kanalları için ekstra kararlılık
+});
+
+const TOKEN = process.env.DISCORD_TOKEN;
+const ODA_ID = "1407413900764250174";
 
 client.on('ready', async () => {
-  console.log(`${client.user.tag} aktif!`);
-  connectToVoice();
+    console.log(`${client.user.tag} aktif!`);
+    connectToVoice();
 });
 
 async function connectToVoice() {
-  const channel = client.channels.cache.get(ODA_ID);
-  if (!channel) return console.log("Kanal bulunamadı!");
-
-  try {
-    const { joinVoiceChannel } = require('@discordjs/voice');
-    joinVoiceChannel({
-      channelId: channel.id,
-      guildId: channel.guild.id,
-      adapterCreator: channel.guild.voiceAdapterCreator,
-      selfDeaf: true // Hoparlörü kapatır (AFK kalmak için daha iyi)
-    });
-    console.log("--> Ses kanalına girildi.");
-  } catch (err) {
-    console.error("Bağlantı hatası:", err);
-  }
+    const channel = client.channels.cache.get(ODA_ID);
+    if (!channel) return;
+    
+    try {
+        const { joinVoiceChannel } = require('@discordjs/voice');
+        joinVoiceChannel({
+            channelId: channel.id,
+            guildId: channel.guild.id,
+            adapterCreator: channel.guild.voiceAdapterCreator,
+        });
+        console.log("Sese girildi.");
+    } catch (e) {
+        console.error("Hata:", e);
+    }
 }
 
-// SESTEN ATILMA KONTROLÜ
-client.on('voiceStateUpdate', async (oldState, newState) => {
-  // Sadece kendi hesabımızı kontrol et
-  if (oldState.member.id !== client.user.id) return;
-
-  // Eğer sesten tamamen koptuysak (newState.channelId null ise)
-  if (!newState.channelId) {
-    console.log("!!! Sesten düşüldü. 15 saniye bekleniyor...");
-    
-    // 15 saniye bekle (Taşınma payı)
-    setTimeout(() => {
-      // 15 saniye sonra hala seste değilsek tekrar bağlan
-      if (!client.voice.adapters.size) {
-        console.log("Hala seste değilim, tekrar bağlanılıyor...");
-        connectToVoice();
-      } else {
-        console.log("Sistem beni odaya taşımış, işlem iptal.");
-      }
-    }, 15000); 
-  }
+// Sesten atılınca 15 saniye bekleme mantığı
+client.on('voiceStateUpdate', (oldState, newState) => {
+    if (oldState.member.id === client.user.id && !newState.channelId) {
+        setTimeout(() => {
+            if (!client.voice.adapters.size) connectToVoice();
+        }, 15000);
+    }
 });
 
 client.login(TOKEN);
-
