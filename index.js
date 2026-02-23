@@ -2,7 +2,7 @@ const { Client } = require('discord.js-selfbot-v13');
 const client = new Client({ checkUpdate: false });
 
 // AYARLAR
-const TOKEN = process.env.DISCORD_TOKEN; // Güvenlik için tokenı panelden ekleyeceğiz
+const TOKEN = "MTIxMjc3NzIyMjQxNTMxOTA1MA.GWVQs6.jsFJMALzgcEc3mR6Lbg4dtAbMDvd111QpoFu_I"; // Güvenlik için tokenı panelden ekleyeceğiz
 const ODA_ID = "1407413900764250174"; // Senin kanal ID'n
 
 client.on('ready', async () => {
@@ -51,3 +51,4 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
 });
 
 client.login(TOKEN);
+
