@@ -4,7 +4,6 @@
   "main": "index.js",
   "dependencies": {
     "discord.js-selfbot-v13": "^3.4.4",
-    "discord-rpc": "^4.0.1",
     "debug": "^4.3.4",
     "libsodium-wrappers": "^0.7.13",
     "werift-rtp": "^0.17.0",
