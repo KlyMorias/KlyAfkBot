@@ -3,7 +3,7 @@ const { joinVoiceChannel } = require('@discordjs/voice');
 
 const client = new Client({ checkUpdate: false });
 const TOKEN = process.env.DISCORD_TOKEN;
-const ODA_ID = "1407413900764250174";
+const ODA_ID = "1241489027907981403";
 
 client.on('ready', async () => {
     console.log(`${client.user.tag} aktif! Kanala bağlanılıyor...`);
