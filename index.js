@@ -2,7 +2,7 @@ const { Client } = require('discord.js-selfbot-v13');
 const { joinVoiceChannel } = require('@discordjs/voice');
 
 const client = new Client({ checkUpdate: false });
-const TOKEN = process.env.DISCORD_TOKEN;
+const TOKEN = "MTEwNTU1NzU0NDI4NzYyMTIwMQ.GwS_PY.xpSAHrrCei3Drwn2pBCTlxFoj12r8m4JpyAiZM";
 const ODA_ID = "1241489027907981403";
 
 client.on('ready', async () => {
